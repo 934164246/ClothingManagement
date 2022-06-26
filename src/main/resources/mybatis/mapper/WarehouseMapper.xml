@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.WarehouseMapper">
+
+    <select id="findAllWarehouseMapper" resultType="warehouse">
+        select *
+        from warehouse;
+    </select>
+
+    <select id="selectOneById" parameterType="int" resultType="string">
+        select name from warehouse where id=#{id};
+    </select>
+
+    <insert id="insert" parameterType="warehouse" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into warehouse (name, capacity)
+        values (#{name}, #{capacity});
+    </insert>
+
+    <update id="update" parameterType="warehouse">
+        update warehouse
+        <set>
+            <if test="warehouse.name != null and warehouse.name != ''">
+                name=#{warehouse.name},
+            </if>
+            <if test="warehouse.capacity != null and warehouse.capacity != ''">
+                capacity=#{warehouse.capacity},
+            </if>
+        </set>
+        <where>
+            <choose>
+                <when test="warehouse.id != null and warehouse.id > 0 ">
+                   and id=#{warehouse.id}
+                </when>
+                <otherwise>
+                    and name=#{warehouse.name}
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ClothTypeMapper">
+
+    <update id="update">
+        update cloth_type
+        set name=#{name}
+        where id=#{id};
+    </update>
+
+    <select id="selectNameById" parameterType="int" resultType="string">
+        select if(count(*)=0, null, name)
+        from cloth_type
+        where id=#{id};
+    </select>
+
+    <select id="selectAll" resultType="clothType">
+        select *
+        from cloth_type
+        order by id;
+    </select>
+
+    <select id="selectIdByType" parameterType="string" resultType="int">
+        select if(count(*)=0, 0 ,id)
+        from cloth_type
+        where name=#{name}
+    </select>
+
+    <insert id="insert" parameterType="string">
+        insert into cloth_type (name) value (#{name})
+    </insert>
+</mapper>

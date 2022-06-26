@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.RecordDetailMapper">
+
+    <resultMap id="recordDetailMap" type="recordDetail">
+        <result property="warehouseId" column="warehouse_id" />
+        <result property="infoId" column="info_id" />
+        <result property="count" column="count" />
+        <association property="warehouseName" column="warehouse_id" javaType="string"
+                     select="com.dao.WarehouseMapper.selectOneById" />
+    </resultMap>
+
+    <insert id="insert">
+        insert into whc_detail
+            (warehouse_id,
+             info_id,
+             serial_number,
+             count)
+        VALUES
+            (#{recordDetail.warehouseId},
+             #{recordDetail.infoId},
+             #{serialNumber},
+             #{recordDetail.count});
+    </insert>
+
+    <update id="updateSerialNumber">
+        update whc_detail
+        set serial_number=#{newSerialNumber}
+        where serial_number=#{oldSerialNumber} and
+              warehouse_id=#{recordDetail.warehouseId} and
+              info_id=#{recordDetail.infoId};
+    </update>
+
+    <update id="updateWarehouseId">
+        update whc_detail
+        set warehouse_id=#{recordDetail.warehouseId}
+        where serial_number=#{serialNumber} and
+              warehouse_id=#{oldWarehouseId} and
+              info_id=#{recordDetail.infoId};
+    </update>
+
+    <update id="updateInfoId">
+        update whc_detail
+        set info_id=#{recordDetail.infoId}
+        where serial_number=#{serialNumber} and
+              warehouse_id=#{recordDetail.warehouseId} and
+              info_id=#{oldInfoId};
+    </update>
+
+    <update id="updateCount">
+        update whc_detail
+        set count=#{recordDetail.count}
+        where serial_number=#{serialNumber} and
+              warehouse_id=#{recordDetail.warehouseId} and
+              info_id=#{recordDetail.infoId};
+    </update>
+
+    <update id="update" parameterType="recordDetail">
+        update whc_detail
+        <set>
+            <if test="new.warehouseId != null and new.warehouseId != ''">
+                warehouse_id=#{new.warehouseId},
+            </if>
+            <if test="new.infoId != null and new.infoId != ''">
+                info_id=#{new.infoId},
+            </if>
+            <if test="new.count != null and new.count != ''">
+                count=#{new.count},
+            </if>
+        </set>
+        where
+            serial_number=#{serialNumber} and
+            warehouse_id=#{old.warehouseId} and
+            info_id=#{old.infoId}
+    </update>
+
+    <select id="selectAllBySerialNumber" parameterType="string" resultMap="recordDetailMap">
+        select *
+        from whc_detail
+        where serial_number=#{serialNumber};
+    </select>
+
+    <select id="selectAllByClothingId" parameterType="int" resultMap="recordDetailMap">
+        select *
+        from whc_detail
+        where info_id in (select id
+                          from clothing_info
+                          where clothing_id = #{clothingId});
+    </select>
+
+    <select id="selectAllByInfoId" parameterType="int" resultMap="recordDetailMap">
+        select *
+        from whc_detail
+        where info_id=#{infoId};
+    </select>
+</mapper>

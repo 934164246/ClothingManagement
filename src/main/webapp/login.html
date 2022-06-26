@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>Hello World</h1>
+<button class="button-for-insert">abcd</button>
+
+</body>
+
+<script type="text/javascript">
+    $(function () {
+        $(".button-for-insert").click(function () {
+            $.ajax({
+                method: "post",
+                url: "user/update",
+                data: {
+                    "account": "abcad",
+                    "user": {
+                        "account":"sfas",
+                        "username": "fasdf",
+                        "password": "啊手动阀手动阀",
+                        "email": "afs"
+                    }
+                },
+                dataType: "json",
+            })
+        })
+    });
+</script>
+</html>

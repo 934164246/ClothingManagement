@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ClothingMapper">
+
+    <resultMap id="clothingMap" type="clothing">
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="typeId" column="type_id" />
+        <result property="url" column="url" />
+        <association property="typeName" column="type_id" javaType="string"
+                     select="com.dao.ClothTypeMapper.selectNameById" />
+        <collection property="infos" column="id" ofType="clothingInfo"
+                    select="com.dao.ClothingInfoMapper.selectByClothId" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="clothingMap">
+        select *
+        from clothing;
+    </select>
+
+    <select id="selectOneById" parameterType="int" resultMap="clothingMap">
+        select *
+        from clothing
+        where id=#{id};
+    </select>
+
+    <select id="selectByTypeId" parameterType="int" resultMap="clothingMap">
+        select *
+        from clothing
+        where type_id=#{typeId};
+    </select>
+
+    <select id="selectByName" parameterType="string" resultMap="clothingMap">
+        select *
+        from clothing
+        where name like concat('%', #{name}, '%');
+    </select>
+
+    <insert id="insert" parameterType="clothing" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into clothing (type_id, name, url)
+        values(#{typeId}, #{name}, #{url});
+    </insert>
+
+
+    <update id="update" parameterType="clothing">
+        update clothing
+        <set>
+            <if test="typeId != null">
+                type_id=#{typeId},
+            </if>
+            <if test="name != null and name != ''">
+                name=#{name},
+            </if>
+        </set>
+        where id=#{id};
+    </update>
+</mapper>

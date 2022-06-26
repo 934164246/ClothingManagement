@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/98bb381c-98c4-46db-8fd4-0390e386f619/select.sql" dialect="MySQL" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/bf7108ec-8cb4-4d6e-92e0-30732afdfb97/data.sql" dialect="MySQL" />
+    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/bf7108ec-8cb4-4d6e-92e0-30732afdfb97/tables.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/dao/WarehouseMapper.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/UserMapper.xml" dialect="MySQL" />
+  </component>
+</project>

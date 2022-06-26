@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.dao.UserMapper">
+
+    <!--<resultMap id="userMap" type="user">
+        <id property="account" column="account" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <collection property="authority" ofType="authority" column="account">
+            <result property="type" column="type" />
+            <result property="select" column="query" />
+            <result property="insert" column="increase" />
+            <result property="update" column="renew" />
+            <result property="delete" column="clear" />
+        </collection>
+    </resultMap>-->
+    <resultMap id="userAndAuthorityMap" type="user">
+        <id property="account" column="account" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="email" column="email" />
+        <collection property="authority" ofType="authority" column="account"
+                    select="com.dao.AuthorityMapper.selectByAccount">
+        </collection>
+    </resultMap>
+
+    <resultMap id="userMap" type="user">
+        <id property="account" column="account" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="email" column="email" />
+    </resultMap>
+
+    <insert id="save" parameterType="user">
+        insert into user
+        values (#{account}, #{username}, #{password}, #{email});
+    </insert>
+
+    <select id="findAll" resultMap="userAndAuthorityMap">
+        select * from user;
+    </select>
+
+    <select id="selectUserAll" resultMap="userAndAuthorityMap">
+        select * from user;
+    </select>
+
+    <select id="login" parameterType="string" resultMap="userAndAuthorityMap">
+        select *
+        from user
+        where account=#{account} and password=#{password}
+    </select>
+
+<!--    select * from authority natural join (select * from user where account=#{account}) as result;-->
+    <select id="selectOne" parameterType="string" resultMap="userAndAuthorityMap">
+        select *
+        from user
+        where account=#{account};
+    </select>
+
+    <update id="updateSelective" parameterType="user">
+        update user
+        <set>
+            <if test="account != null and account != ''">
+                account=#{account}
+            </if>
+            <if test="username != null and username != ''">
+                username=#{username},
+            </if>
+            <if test="password != null and password != ''">
+                password=#{password},
+            </if>
+            <if test="email != null and email != ''">
+                email=#{email},
+            </if>
+        </set>
+        where account=#{account};
+    </update>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.AuthorityMapper">
+    <resultMap id="authorityResult" type="authority">
+        <result property="type" column="type" />
+        <result property="select" column="query" />
+        <result property="insert" column="increase" />
+        <result property="update" column="renew" />
+        <result property="delete" column="clear" />
+    </resultMap>
+    
+    <select id="selectByAccount" parameterType="string" resultMap="authorityResult">
+        select type, query, increase, renew, clear
+        from authority
+        where account=#{account} and
+              (query = true or
+               increase =true or
+               renew =true or
+               clear = true )
+    </select>
+
+
+    <update id="update">
+        update authority
+        <set>
+            <if test="authority.select != null" >
+                query=#{authority.select},
+            </if>
+            <if test="authority.insert != null " >
+                increase=#{authority.insert},
+            </if>
+            <if test="authority.update != null" >
+                renew=#{authority.update},
+            </if>
+            <if test="authority.delete != null" >
+                clear=#{authority.delete},
+            </if>
+        </set>
+        where account=#{account} and type=#{authority.type};
+    </update>
+
+<!--    insert into authority
+        values (
+            #{account},
+            #{authority.type},
+            #{authority.select},
+            #{authority.insert},
+            #{authority.update},
+            #{authority.delete}
+        )-->
+    <insert id="insert">
+        insert into authority
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            account,
+            type,
+            <if test="authority.select != null">
+                query,
+            </if>
+            <if test="authority.insert != null">
+                increase,
+            </if>
+            <if test="authority.update != null">
+                renew,
+            </if>
+            <if test="authority.delete != null">
+                clear,
+            </if>
+        </trim>
+        <trim prefix="value (" suffix=")" suffixOverrides=",">
+            #{account},
+            #{authority.type},
+            <if test="authority.select != null">
+                #{authority.select},
+            </if>
+            <if test="authority.insert != null">
+                #{authority.insert},
+            </if>
+            <if test="authority.update != null">
+                #{authority.update},
+            </if>
+            <if test="authority.delete != null">
+                #{authority.delete},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectOne" parameterType="string" resultMap="authorityResult">
+        select *
+        from authority
+        where account=#{account} and type=#{type}
+    </select>
+
+    <delete id="delete" parameterType="string">
+        delete from authority where account=#{account} and type=#{type};
+    </delete>
+
+    <select id="selectTest" parameterType="string" resultType="string">
+        select #{authority.delete};
+    </select>
+</mapper>

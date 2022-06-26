@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ClothingInfoMapper">
+
+    <select id="selectByClothId" parameterType="int" resultType="clothingInfo">
+        select *
+        from clothing_info
+        where clothing_id=#{clothingId};
+    </select>
+
+    <select id="selectOneById" parameterType="int" resultType="clothingInfo">
+        select *
+        from clothing_info
+        where id=#{id};
+    </select>
+
+    <select id="selectClothingIdByInfoId" parameterType="int" resultType="int">
+        select clothing_id
+        from clothing_info
+        where id=#{info_id};
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="clothingInfo.id" keyColumn="id">
+        insert into clothing_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            clothing_id,
+            <if test="clothingInfo.color != null and clothingInfo.color !=''">
+                color,
+            </if>
+            <if test="clothingInfo.size != null and clothingInfo.size != ''">
+                size,
+            </if>
+            <if test="clothingInfo.count != null and clothingInfo.count >= 0">
+                count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{clothingId},
+            <if test="clothingInfo.color != null and clothingInfo.color !=''">
+                #{clothingInfo.color},
+            </if>
+            <if test="clothingInfo.size != null and clothingInfo.size != ''">
+                #{clothingInfo.size},
+            </if>
+            <if test="clothingInfo.count != null and clothingInfo.count >= 0">
+                #{clothingInfo.count}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update clothing_info
+        <set>
+            <if test="clothingInfo.color != null and clothingInfo.color !='' and id != null and id > 0">
+                color=#{clothingInfo.color},
+            </if>
+            <if test="clothingInfo.size != null and clothingInfo.size > 0 and id != null and id > 0">
+                size=#{clothingInfo.size},
+            </if>
+            <if test="clothingInfo.count != null and clothingInfo.count >= 0">
+                count=#{clothingInfo.count},
+            </if>
+        </set>
+        <where>
+            <choose>
+                <when test="id != null and id > 0">
+                    id=#{clothingInfo.id}
+                </when>
+                <otherwise>
+                    clothing_id=#{clothingId} and
+                    color=#{clothingInfo.color} and
+                    size=#{clothingInfo.size}
+                </otherwise>
+            </choose>
+        </where>
+    </update>
+    <update id="updateCountById">
+        update clothing_info set count=count+#{count} where id=#{clothingId};
+    </update>
+</mapper>
